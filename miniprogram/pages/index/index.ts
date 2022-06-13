@@ -4,7 +4,8 @@ const app = getApp<IAppOption>()
 
 Page({
   data: {
-    motto: 'Hello World',
+    motto: 'hi',
+    code: '',
     userInfo: {},
     hasUserInfo: false,
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
@@ -17,11 +18,21 @@ Page({
       url: '../logs/logs',
     })
   },
-  onLoad() {
+  onLoad(query: any) {
+    const scene = decodeURIComponent(query.scene)
     // @ts-ignore
     if (wx.getUserProfile) {
       this.setData({
         canIUseGetUserProfile: true
+      })
+    }
+    
+    console.log(scene);
+    console.log(query);
+    
+    if (scene!="undefined") {
+      this.setData({
+        motto: scene
       })
     }
   },
@@ -35,7 +46,16 @@ Page({
           userInfo: res.userInfo,
           hasUserInfo: true
         })
+        console.log(this.data.code, this.data.userInfo);
       }
+    })
+    wx.login({
+      success: res => {
+        console.log(res.code)
+        this.setData({
+          code: res.code
+        })
+      },
     })
   }
 })
